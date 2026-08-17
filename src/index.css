@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-brand-cream text-brand-ink antialiased;
+    margin: 0;
+  }
+}
+
+@layer components {
+  /* Custom range slider (Likert) thumb styling — not expressible with Tailwind utilities alone */
+  .likert-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    border-radius: 9999px;
+    background: linear-gradient(to right, #a9812f var(--fill, 50%), #e2ddd0 var(--fill, 50%));
+    outline: none;
+  }
+
+  .likert-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 9999px;
+    background: #1b2a4a;
+    border: 3px solid #ffffff;
+    box-shadow: 0 1px 4px rgba(27, 42, 74, 0.45);
+    cursor: pointer;
+    transition: transform 0.15s ease;
+  }
+
+  .likert-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.08);
+  }
+
+  .likert-slider::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: 9999px;
+    background: #1b2a4a;
+    border: 3px solid #ffffff;
+    box-shadow: 0 1px 4px rgba(27, 42, 74, 0.45);
+    cursor: pointer;
+  }
+
+  .likert-slider::-moz-range-progress {
+    background: #a9812f;
+    height: 6px;
+    border-radius: 9999px;
+  }
+}
+
+@layer utilities {
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
