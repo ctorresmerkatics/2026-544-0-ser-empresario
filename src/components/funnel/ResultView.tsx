@@ -26,6 +26,71 @@ export function ResultView() {
   const { segment, categoryScores } = result;
   const firstName = state.contact.nombre.split(' ')[0] || 'ahí';
 
+  // Función para convertir las respuestas a un formato HTML amigable
+function construirHtmlRespuestas(answers, contact, result) {
+    let html = `
+      <h3>Datos de Contacto:</h3>
+      <ul>
+        <li><strong>Nombre:</strong> ${contact.nombre || 'No proporcionado'}</li>
+        <li><strong>Email:</strong> ${contact.email || 'No proporcionado'}</li>
+        <li><strong>Teléfono:</strong> ${contact.telefono || 'No proporcionado'}</li>
+      </ul>
+      <h3>Respuestas del Diagnóstico:</h3>
+      <ul>
+    `;
+
+    for (const [questionId, respuesta] of Object.entries(answers)) {
+      html += `<li><strong>${questionId}:</strong> ${respuesta}</li>`;
+    }
+
+    html += `</ul>`;
+
+    if (result) {
+      html += `
+        <h3>Resultado:</h3>
+        <p><strong>Puntaje Total:</strong> ${result.total}</p>
+        <p><strong>Segmento:</strong> ${result.segment?.title || ''}</p>
+      `;
+    }
+
+    return html;
+  }
+
+  // Función para invocar el endpoint backend
+  async function enviarFormulario(state) {
+    const respuestasHtml = construirHtmlRespuestas(
+      state.answers,
+      state.contact,
+      state.result
+    );
+
+    const payload = {
+      nombre: state.contact.nombre,
+      email: state.contact.email,
+      telefono: state.contact.telefono,
+      respuestasHtml: respuestasHtml
+    };
+
+    try {
+      const response = await fetch('http://localhost:3001/enviar-aplicacion', { // O la URL de Vercel/Servidor
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log('Correo enviado correctamente', data);
+      } else {
+        console.error('Error al enviar:', data.error);
+      }
+    } catch (err) {
+      console.error('Error de red al enviar el correo:', err);
+    }
+  }
+
   return (
     <div className="py-10">
       <div className="mx-auto max-w-xl rounded-3xl border border-brand-navy/10 bg-white/70 p-6 text-center shadow-card sm:p-10">
