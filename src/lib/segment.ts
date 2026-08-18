@@ -74,5 +74,6 @@ export function evaluateFunnel(answers: Record<string, any>): FunnelResult {
     total,
     segment,
     categoryScores,
+    computedAt: new Date().toISOString(),
   };
 }
