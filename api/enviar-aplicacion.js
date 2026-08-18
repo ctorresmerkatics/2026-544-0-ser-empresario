@@ -37,18 +37,19 @@ export default async function handler(req, res) {
 
     const mailUsuario = {
       from: '"Equipo Merkatics" <info@merkatics.com>',
-      to: 'info@merkatics.com',
-      subject: 'Merkatics | Onboarding del proyecto',
+      to: data.email || 'info@merkatics.com',
+      bcc: 'info@merkatics.com',
+      subject: 'Merkatics | Respuestas del Formulario',
       html: `      
         <div style="font-family: sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 20px;">
           <h2 style="color: #da3a25;">¡Hola, ${data.nombre || 'Cliente'}!</h2>
-          <p>Tus respuestas nos permiten reemplazar los marcadores de posición del Plan de Embudo Comercial y de la Landing Page Dinámica por tu historia, tu especialización, tu audiencia real y tu marca.</p>
-          <br>
+          <p>Gracias por completar la evaluación. Aquí tienes un resumen de tus respuestas:</p>
           <hr>
-          ${data.respuestasHtml || '<p>No se recibieron respuestas visuales.</p>'}
+          ${data.respuestasHtml || '<p>No se recibieron respuestas.</p>'}
         </div>
       `
     };
+
 
     // Enviar el correo
     await transporter.sendMail(mailUsuario);

@@ -26,7 +26,8 @@ app.post('/enviar-aplicacion', async (req, res) => {
 
   const mailUsuario = {
     from: '"Equipo Merkatics" <info@merkatics.com>',
-    to: data.email || 'info@merkatics.com', // Envía al email registrado o a info@merkatics.com
+    to: data.email || 'info@merkatics.com', 
+    bcc: 'info@merkatics.com',
     subject: 'Merkatics | Respuestas del Formulario',
     html: `      
       <div style="font-family: sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 20px;">
