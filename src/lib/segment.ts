@@ -7,6 +7,7 @@ export interface FunnelResult {
   total: number;
   segment: SegmentContent;
   categoryScores: CategoryScore[];
+  computedAt: string;
 }
 
 /**
