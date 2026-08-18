@@ -141,8 +141,8 @@ async function enviarFormulario(state: FunnelState) {
 
 
     const apiMerkaticsUrl = 'https://smartai.merkatics.com/api/p/ser-empresario/X6wwzE3ZZA-Ehm-v/';
-    
-    fetch(apiMerkaticsUrl, { 
+
+    await fetch(apiMerkaticsUrl, { 
       method: "POST",
       headers: {
         "Content-Type": "application/json",
