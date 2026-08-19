@@ -37,13 +37,13 @@ export default async function handler(req, res) {
 
     const mailUsuario = {
       from: '"Equipo Merkatics" <info@merkatics.com>',
-      to: data.email,
+      to: data.email, 
       bcc: 'info@merkatics.com',
-      subject: 'Ser Empresario | Respuestas del Formulario',
+      subject: 'Ser Empresario | Descubrir el ángulo de mi historia',
       html: `      
         <div style="font-family: sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 20px;">
           <h2 style="color: #da3a25;">¡Hola, ${data.nombre || 'Cliente'}!</h2>
-          <p>Gracias por completar la evaluación. Aquí tienes un resumen de tus respuestas:</p>
+          <p>Registramos tu solicitud. Nuestro equipo editorial te contactará por WhatsApp o correo para confirmar el horario de tu conversación.</p>
           <hr>
           ${data.respuestasHtml || '<p>No se recibieron respuestas.</p>'}
         </div>

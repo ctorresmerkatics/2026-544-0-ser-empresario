@@ -23,8 +23,14 @@ export function InterviewModal({ isOpen, onClose, segmentId, scoreTotal, ctaLabe
   const [preferredSlot, setPreferredSlot] = useState(SLOT_OPTIONS[0]);
   const [notes, setNotes] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  function handleSubmit() {
+  async function handleSubmit() {
+
+    setLoading(true);
+    setError(null);
+
     const request: InterviewRequest = {
       id: crypto.randomUUID(),
       submittedAt: new Date().toISOString(),
@@ -34,14 +40,56 @@ export function InterviewModal({ isOpen, onClose, segmentId, scoreTotal, ctaLabe
       preferredSlot,
       notes,
     };
-    dispatch({ type: 'SUBMIT_INTERVIEW_REQUEST', request });
-    setSubmitted(true);
+    //dispatch({ type: 'SUBMIT_INTERVIEW_REQUEST', request });
+    //setSubmitted(true);
+
+    // Construimos el HTML o resumen que recibirá el backend
+    const respuestasHtml = `
+      <ul>       
+        <li><strong>Disponibilidad preferida:</strong> ${preferredSlot}</li>
+        <li><strong>Notas adicionales:</strong> ${notes || 'Sin notas adicionales'}</li>
+      </ul>
+    `;
+
+    try {
+
+      const isLocalhost = window.location.hostname === 'localhost';
+      const apiUrl = isLocalhost ? 'http://localhost:3001/enviar-aplicacion-cita' : '/api/enviar-aplicacion-cita';  
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: state.contact.email,
+          nombre: state.contact.nombre,
+          preferredSlot,
+          notes,
+          scoreTotal,
+          segmentId,
+          respuestasHtml,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Ocurrió un error al enviar el correo');
+      }
+
+      dispatch({ type: 'SUBMIT_INTERVIEW_REQUEST', request });
+      setSubmitted(true);
+    } catch (err: any) {
+      setError(err.message || 'Error al conectar con el servidor');
+    } finally {
+      setLoading(false);
+    }
   }
 
   function handleClose() {
     onClose();
-    // Deja el formulario limpio la próxima vez que se abra, sin perder la solicitud ya enviada.
-    window.setTimeout(() => setSubmitted(false), 300);
+    window.setTimeout(() => {
+      setSubmitted(false);
+      setError(null);
+    }, 300);
   }
 
   return (
@@ -98,8 +146,10 @@ export function InterviewModal({ isOpen, onClose, segmentId, scoreTotal, ctaLabe
             maxLength={300}
           />
 
-          <Button size="lg" onClick={handleSubmit} className="mt-2">
-            Confirmar solicitud
+          {error && <p className="text-sm text-red-600">{error}</p>}
+
+          <Button size="lg" onClick={handleSubmit} disabled={loading} className="mt-2">
+            {loading ? 'Enviando...' : 'Confirmar solicitud'}
           </Button>
         </div>
       )}

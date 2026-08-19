@@ -131,7 +131,11 @@ async function enviarFormulario(state: FunnelState) {
   };
 
   try {
-    const response = await fetch('http://localhost:3001/enviar-aplicacion', {
+
+    const isLocalhost = window.location.hostname === 'localhost';
+    const apiUrl = isLocalhost ? 'http://localhost:3001/enviar-aplicacion' : '/api/enviar-aplicacion';
+
+    const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
